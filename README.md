@@ -214,81 +214,25 @@ One operator can manage multiple runs - ideal for
 batch production with minimal labor overhead
 ```
 
-### Cost Efficiency Analysis
-**2,000+ PCBs Successfully Processed**
-
-With 29 boards per feeder cycle and 2,000+ boards processed:
-- **Total Cycles Required:** ~69 feeder reloads
-- **Machine Runtime (Autonomous):** ~30 hours
-- **Operator Input:** ~1.5 hours (managing feeder reloads only)
-
-**Detailed Cost Comparison (€25/hour labor, €0.35/kWh electricity):**
-
-| Cost Category | Manual Soldering | Production Line |
-|---|---|---|
-| **Labor Time** | 5.56 hours | 1.5 hours |
-| **Labor Cost** | €139.00 | €37.50 |
-| **Electricity** | ~€0.10 | €3.68* |
-| **Total Operating Cost** | **€139.10** | **€41.18** |
-| **Cost Savings per 2,000 units** | — | **€97.92** |
-
-*3D printer power consumption: ~350W average × 30 hours = 10.5 kWh × €0.35/kWh = €3.68
-
-**Return on Investment (ROI):**
-- Hardware investment: €2,000
-- Profit per 2,000 units: €97.92
-- **Break-even point: ~41,000 units** (~20 production runs)
-- After ROI: €97.92 profit per 2,000 units, fully automated
-
 ---
 
 ## 📈 Weekly Production Comparison: Manual vs. Automated
 
 **Scenario:** One technician, 5 days/week, 8 hours/day = **40 working hours/week**
 
-### Option A: Full Manual Soldering
-- **Time per unit:** 10 seconds
-- **Units per hour:** 360 boards
-- **Weekly output:** 40 hours × 360 = **14,400 boards/week**
-- **Weekly labor cost:** 40 hours × €25 = **€1,000**
-- **Cost per unit:** €1,000 / 14,400 = **€0.069/board**
+### 🔴 Option A: Full Manual Soldering
+- **Weekly output:** 14,400 boards/week
+- **Weekly labor cost:** €1,000
+- **Cost per unit:** €0.069/board
 
-### Option B: Operator + Automated Production Line
-**Daily workflow (8 hours):**
-- **Machine runtime:** ~6.5 hours autonomous (processes ~217 boards)
-- **Operator reload time:** ~0.5 hours (12-15 reload cycles)
-- **Manual soldering buffer:** Remaining 1.0 hour = 360 manual boards
-
-**Weekly output:**
-- **From Production Line:** 5 days × 217 boards = **1,085 boards/week** (automated)
-- **From Manual Backup:** 5 days × 360 boards × 1 hour = **1,800 boards/week** (manual)
-- **Total output:** 1,085 + 1,800 = **2,885 boards/week**
-- **Weekly labor cost:** 40 hours × €25 = **€1,000**
-- **Weekly electricity cost:** 6.5 hours × 5 days × 0.35 kW × €0.35 = **€3.59**
-- **Total weekly cost:** €1,003.59
-- **Cost per unit:** €1,003.59 / 2,885 = **€0.348/board**
-
-Wait, that doesn't look right - the manual option is cheaper per unit. Let me recalculate:
-
-**Option B (Corrected): Operator + Automated Production Line**
-
-The key insight: The production line handles 217 boards per day WHILE the operator does other work or manual overflow.
-
-**Daily workflow (8 hours):**
-- **Production line cycle:** 1 hour = 54 boards (using 29-board capacity: 26.15 min + 2 min reload)
-- **Daily from line (6 cycles):** 6 × 54 = 324 boards
-- **Reload/supervision time needed:** ~0.5 hours
-- **Available for manual soldering:** 1.5 hours = 540 boards
-
-**Weekly output:**
-- **From Production Line:** 5 days × 324 boards = **1,620 boards/week** (automated)
-- **From Manual work:** 5 days × 540 boards = **2,700 boards/week** (manual)
-- **Total output:** 1,620 + 2,700 = **4,320 boards/week**
-- **Weekly labor cost:** 40 hours × €25 = **€1,000**
-- **Weekly electricity cost (production line):** 30 hours × 0.35 kW × €0.35 = **€3.68**
-- **Total weekly cost:** €1,003.68
-- **Cost per unit (production line only):** €3.68 / 1,620 = **€0.00227/board**
-- **Blended cost per unit (all):** €1,003.68 / 4,320 = **€0.232/board**
+### 🟢 Option B: Operator + Automated Production Line
+- **From Production Line:** 1,620 boards/week (automated, minimal supervision)
+- **From Manual work:** 2,700 boards/week (operator handles overflow)
+- **Total weekly output:** 4,320 boards/week
+- **Weekly labor cost:** €1,000
+- **Weekly electricity:** €3.68
+- **Cost per automated unit:** €0.00227/board
+- **Blended cost:** €0.232/board
 
 ---
 
