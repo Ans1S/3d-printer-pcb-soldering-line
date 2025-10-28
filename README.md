@@ -91,7 +91,7 @@ A complete production line featuring:
 
 ### 1️⃣ **Autonomous Object Detection System**
 <div align="center">
-  <img src="images/hmi.gif" alt="HMI Interaction" width="500" height="400">
+  <img src="images/hmi.gif" alt="HMI Interaction" width="800" height="450">
 </div>
 
 **Challenge:** Reliably detect ultrathin PCBs on a moving conveyor belt
@@ -137,7 +137,7 @@ while production_running:
 
 ### 3️⃣ **G-Code Generation & Precision Movement**
 <div align="center">
-  <img src="images/gcode.gif" alt="G-Code Execution" width="550" height="450">
+  <img src="images/gcode.gif" alt="G-Code Execution" width="540" height="960">
 </div>
 
 **Challenge:** Control 3D printer for precision soldering with micron-level accuracy
@@ -146,7 +146,7 @@ while production_running:
 
 ### 4️⃣ **Multi-Component System Orchestration**
 <div align="center">
-  <img src="images/the_Line.gif" alt="Production Line" width="550" height="450">
+  <img src="images/the_Line.gif" alt="Production Line" width="540" height="960">
 </div>
 
 **Challenge:** Synchronize 7+ independent components with precise timing
