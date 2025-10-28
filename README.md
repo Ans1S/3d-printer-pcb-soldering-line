@@ -217,47 +217,6 @@ batch production with minimal labor overhead
 ---
 
 ## 📈 Weekly Production Comparison: Manual vs. Automated
-
-**Scenario:** One technician, 5 days/week, 8 hours/day = **40 working hours/week**
-
-### 🔴 Option A: Full Manual Soldering
-- **Weekly output:** 14,400 boards/week
-- **Weekly labor cost:** €1,000
-- **Cost per unit:** €0.069/board
-
-### 🟢 Option B: Operator + Automated Production Line
-- **From Production Line:** 1,620 boards/week (automated, minimal supervision)
-- **From Manual work:** 2,700 boards/week (operator handles overflow)
-- **Total weekly output:** 4,320 boards/week
-- **Weekly labor cost:** €1,000
-- **Weekly electricity:** €3.68
-- **Cost per automated unit:** €0.00227/board
-- **Blended cost:** €0.232/board
-
----
-
-### 📊 Weekly Comparison Summary
-
-| Metric | Manual Only | Automated + Manual |
-|---|---|---|
-| **Weekly Output** | 14,400 boards | 4,320 boards* |
-| **Weekly Labor Cost** | €1,000 | €1,000 |
-| **Weekly Electricity** | ~€0 | €3.68 |
-| **Total Weekly Cost** | €1,000 | €1,003.68 |
-| **Cost per Unit** | €0.069 | €0.232 |
-| **Cost per Automated Unit** | — | **€0.00227** |
-
-*Mixed mode: 1,620 automated + 2,700 manual
-
-### 🎯 The Real Value Proposition
-
-The production line doesn't replace manual soldering—it **scales production**:
-- **Manual workload:** 14,400 units/week (exhausting, repetitive, prone to errors)
-- **Hybrid approach:** Operator manages line (1.5 hours/day oversight) + handles overflow manually (1.5 hours/day focused work)
-- **Machine cost amortized:** €3.68/week = €190/year for sub-€0.003 cost per automated unit
-- **Quality improvement:** Automated joints are consistent; manual work is oversight/validation
-- **Worker wellbeing:** 40 hours of varied work vs. 40 hours of repetitive soldering
-
 ---
 
 ## 🎯 Technical Implementation Highlights
