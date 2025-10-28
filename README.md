@@ -18,11 +18,11 @@ This project showcases the complete design and implementation of an **automated 
 
 ### 🎯 Core Challenge
 Develop an intelligent, fully-automated production system capable of:
-- **Autonomous part detection** using computer vision (light sensor)
+- **Autonomous part detection** using ambient light sensor
 - **Precise positioning** via pneumatic actuators and conveyor belts
 - **Real-time control** of heating elements and movement mechanisms
 - **Responsive user interface** for both automatic and manual operation modes
-- **Reliable communication** between multiple system components over TCP/IP
+- **Reliable communication** between multiple system components over USB/Serial, I2C, and REST API
 
 ### ✅ Solution Delivered
 A complete production line featuring:
@@ -49,8 +49,8 @@ A complete production line featuring:
 |-------|-----------|---------|
 | **UI Layer** | Kivy Framework | Touch-optimized HMI with real-time feedback |
 | **Application Layer** | Python 3 | Core business logic, state management |
-| **Hardware Layer** | RPi.GPIO, I2C libraries | Direct GPIO & sensor control |
-| **Communication** | OctoPrint REST API, G-Code | 3D printer control and monitoring |
+| **Hardware Layer** | RPi.GPIO, I2C libraries | Direct GPIO & I2C sensor control |
+| **Printer Communication** | OctoPrint REST API | 3D printer control and G-Code execution |
 | **OS** | OctoPi (Raspbian) + Klipper | Lightweight OS with firmware stack |
 
 ### System Architecture Diagram
@@ -96,15 +96,15 @@ A complete production line featuring:
 
 **Challenge:** Reliably detect ultrathin PCBs on a moving conveyor belt
 - **Solution:** APDS-9960 ambient light sensor with adaptive threshold (500 lux)
-- **Innovation:** Debounced detection with configurable sensitivity
-- **Result:** 100% detection accuracy at production speeds (15-20 PCBs/min)
+- **Innovation:** Detects **darkness** (PCB blocks light) with debounced sensitivity
+- **Result:** 100% detection accuracy at production speeds when PCB covers sensor
 
 **Technical Details:**
 ```python
 # Real-time object detection loop
 while production_running:
     brightness = apds9960.read_light()
-    if brightness > BRIGHTNESS_THRESHOLD:
+    if brightness < DARKNESS_THRESHOLD:  # PCB detected when it BLOCKS light
         # Conveyor blocked - PCB detected!
         trigger_soldering_sequence()
     time.sleep(0.05)  # 20Hz polling rate
@@ -144,18 +144,54 @@ while production_running:
 
 **Solution Architecture:**
 ```python
-# Multi-position soldering sequence
-sequence = [
-    ("@home", "Reset to origin"),
-    ("@pos0", "Move to pin row 1"),
-    ("@loeten", "Activate soldering iron - 300ms contact"),
-    ("@pos1", "Move to pin row 2"),
-    ("@loeten", "Solder second pin"),
-    # ... continues for all pins
+# G-Code command sequence for soldering operations
+# Each command is sent individually via OctoPrint REST API
+commands = [   
+    "led_on",           # Visual feedback
+    "G91",              # Set relative positioning mode
+    # HOME - Return to origin
+    "G0 Z250 F30000",   # Move Z up (safety clearance)
+    "G28 Z0 F9000",     # Home Z-axis
+    "G90",              # Set absolute positioning mode
+    
+    # POSITION 0 - Move to first pin
+    "G91",              # Relative mode
+    "G0 Z-250 F30000",  # Move Z down
+    "G0 X-115.2 F30000","G0 Y-34.6 F30000",  # XY movement
+    
+    # POSITION 1 - Move to soldering height
+    "G91",
+    "G0 Z-76 F20000",   # Coarse Z movement
+    "G0 Z-2.8 F200",    # Fine Z approach
+    
+    # SOLDER - Contact and heat pin
+    "G91",
+    "G0 X0.20 F100",    # Micro-adjustment XY
+    "G0 Y-0.35 F100",
+    "G0 Z-0.20 F100",   # Final contact
+    "G4 P2500",         # Wait 2.5 seconds (heat)
+    "G1 E7 F250",       # Solder feed
+    "G4 P2500",         # Wait 2.5 seconds
+    "G0 Z0.20 F1000",   # Retract Z
+    "G0 Z1 F5000",      # Quick lift
+    "G0 X-0.2 F100",    # Retract XY
+    "G0 Y0.35 F100",
+    "G0 Z-1 F1000",     # Reset Z
+    
+    # ... Repeats for each pin (POS2, POS3, etc.)
+    
+    # HOME - Return safely
+    "G91",
+    "G0 Z250 F30000",   # Move Z up
+    "G28 Z0 F9000",     # Home Z-axis
+    "G90",              # Absolute mode
+    "led_off"           # Turn off indicator
 ]
 
-# Executed via OctoPrint REST API
-api.send_gcode_command(sequence)
+# Each command is sent individually:
+for command in commands:
+    response = requests.post(OCTOPRINT_URL, headers=headers, json={"command": command})
+    time.sleep(0.05)    # 50ms between commands
 ```
 
 **Key Features:**
@@ -270,7 +306,7 @@ With 29 boards per feeder cycle and 2,000+ boards processed:
 - Memory-efficient operations on resource-constrained RPi 3B+ (1GB RAM)
 
 **2. Multi-Protocol Hardware Integration**
-- USB communication with 3D printer firmware (Klipper) over serial
+- USB/Serial communication with 3D printer firmware (Klipper) for G-Code transmission
 - OctoPrint REST API for high-level printer control and macro execution
 - GPIO direct control for pneumatic actuators and heating elements
 - I2C sensor bus for light-based object detection with debouncing logic
