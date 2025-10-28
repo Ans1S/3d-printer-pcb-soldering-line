@@ -4,7 +4,7 @@
 
 <br />
 <div align="center">
-  <img src="images/3d-printer.jpg" alt="3D Printer Production Line" width="550" height="450">
+  <img src="images/3d-printer.jpg" alt="3D Printer Production Line" width="750" height="600">
   <p align="center">
     <strong>A sophisticated industrial automation project combining robotics, embedded systems, and IoT integration</strong>
   </p>
@@ -91,7 +91,7 @@ A complete production line featuring:
 
 ### 1️⃣ **Autonomous Object Detection System**
 <div align="center">
-  <img src="images/hmi.gif" alt="HMI Interaction" width="400" height="300">
+  <img src="images/hmi.gif" alt="HMI Interaction" width="500" height="400">
 </div>
 
 **Challenge:** Reliably detect ultrathin PCBs on a moving conveyor belt
@@ -112,7 +112,7 @@ while production_running:
 
 ### 2️⃣ **Responsive Touch Interface with Dual Control Modes**
 <div align="center">
-  <img src="images/touch.png" alt="Touch Interface" width="500" height="400">
+  <img src="images/touch.png" alt="Touch Interface" width="550" height="450">
 </div>
 
 **Challenge:** Create intuitive UI for both automated and manual operations
@@ -137,88 +137,21 @@ while production_running:
 
 ### 3️⃣ **G-Code Generation & Precision Movement**
 <div align="center">
-  <img src="images/gcode.gif" alt="G-Code Execution" width="450" height="350">
+  <img src="images/gcode.gif" alt="G-Code Execution" width="550" height="450">
 </div>
 
 **Challenge:** Control 3D printer for precision soldering with micron-level accuracy
 
-**Solution Architecture:**
-```python
-# G-Code command sequence for soldering operations
-# Each command is sent individually via OctoPrint REST API
-commands = [   
-    "led_on",           # Visual feedback
-    "G91",              # Set relative positioning mode
-    # HOME - Return to origin
-    "G0 Z250 F30000",   # Move Z up (safety clearance)
-    "G28 Z0 F9000",     # Home Z-axis
-    "G90",              # Set absolute positioning mode
-    
-    # POSITION 0 - Move to first pin
-    "G91",              # Relative mode
-    "G0 Z-250 F30000",  # Move Z down
-    "G0 X-115.2 F30000","G0 Y-34.6 F30000",  # XY movement
-    
-    # POSITION 1 - Move to soldering height
-    "G91",
-    "G0 Z-76 F20000",   # Coarse Z movement
-    "G0 Z-2.8 F200",    # Fine Z approach
-    
-    # SOLDER - Contact and heat pin
-    "G91",
-    "G0 X0.20 F100",    # Micro-adjustment XY
-    "G0 Y-0.35 F100",
-    "G0 Z-0.20 F100",   # Final contact
-    "G4 P2500",         # Wait 2.5 seconds (heat)
-    "G1 E7 F250",       # Solder feed
-    "G4 P2500",         # Wait 2.5 seconds
-    "G0 Z0.20 F1000",   # Retract Z
-    "G0 Z1 F5000",      # Quick lift
-    "G0 X-0.2 F100",    # Retract XY
-    "G0 Y0.35 F100",
-    "G0 Z-1 F1000",     # Reset Z
-    
-    # ... Repeats for each pin (POS2, POS3, etc.)
-    
-    # HOME - Return safely
-    "G91",
-    "G0 Z250 F30000",   # Move Z up
-    "G28 Z0 F9000",     # Home Z-axis
-    "G90",              # Absolute mode
-    "led_off"           # Turn off indicator
-]
-
-# Each command is sent individually:
-for command in commands:
-    response = requests.post(OCTOPRINT_URL, headers=headers, json={"command": command})
-    time.sleep(0.05)    # 50ms between commands
-```
-
-**Key Features:**
-- Position-based macro system (9 predefined positions)
-- Velocity control to prevent part shifting
-- Error recovery with automatic homing
-- G-Code logging for process validation
+**Solution:** Position-based macro system (9 calibrated soldering positions) executed via OctoPrint REST API. Each movement is calculated to achieve micro-meter precision for reliable solder joint creation.
 
 ### 4️⃣ **Multi-Component System Orchestration**
 <div align="center">
-  <img src="images/the_Line.gif" alt="Production Line" width="500" height="380">
+  <img src="images/the_Line.gif" alt="Production Line" width="550" height="450">
 </div>
 
 **Challenge:** Synchronize 7+ independent components with precise timing
 
-**Implemented Solution:**
-1. **State Machine Architecture:** Clear sequence flow with error states
-2. **Event-Driven Design:** Sensor triggers → GPIO responses → OctoPrint commands
-3. **Timeout Handling:** Automatic abort if any component doesn't respond
-4. **Persistent State:** System survives crashes with JSON configuration
-5. **Emergency Protocols:** M112 (emergency stop) sent directly to printer
-
-**Real-time Performance Metrics:**
-- GPIO response time: < 5ms
-- Sensor polling frequency: 20Hz (50ms cycle)
-- OctoPrint API latency: 100-200ms average
-- Complete soldering cycle: 45-60 seconds per board
+**Solution:** Event-driven state machine architecture orchestrating sensor input → GPIO control → OctoPrint commands with automatic timeout handling and error recovery.
 
 ### 5️⃣ **Industrial-Grade Error Handling**
 
@@ -297,46 +230,24 @@ With 29 boards per feeder cycle and 2,000+ boards processed:
 
 ## 🎯 Technical Implementation Highlights
 
-### Core Engineering Competencies
+**Real-Time Embedded Control**
+- GPIO response time < 5ms for pneumatic and heating element control
+- I2C sensor polling at 20Hz with non-blocking background threading
+- State machine preventing race conditions across 7+ hardware components
 
-**1. Real-Time Embedded Systems**
-- GPIO control with < 5ms response latency for time-critical operations
-- I2C protocol implementation for sensor polling at 20Hz without blocking the UI thread
-- State machine architecture preventing race conditions in multi-component environments
-- Memory-efficient operations on resource-constrained RPi 3B+ (1GB RAM)
+**Multi-Protocol Integration**
+- USB/Serial with 3D printer firmware (Klipper) for precise G-Code control
+- OctoPrint REST API for high-level printer orchestration
+- GPIO direct control for actuators and heating
+- I2C sensor bus for object detection
 
-**2. Multi-Protocol Hardware Integration**
-- USB/Serial communication with 3D printer firmware (Klipper) for G-Code transmission
-- OctoPrint REST API for high-level printer control and macro execution
-- GPIO direct control for pneumatic actuators and heating elements
-- I2C sensor bus for light-based object detection with debouncing logic
+**Production-Grade Architecture**
+- Event-driven design with automatic error recovery and timeouts
+- Persistent JSON-based state surviving system crashes
+- Comprehensive logging and monitoring at each system layer
+- Automatic homing and position verification for repeatability
 
-**3. Real-World System Constraints**
-- Timing synchronization across 7+ independent hardware components
-- Thermal management (soldering iron heating/cooling cycles)
-- Mechanical precision requirements for PCB alignment
-- Power budget optimization for consistent operation
-
-**4. Production-Grade Software Architecture**
-- Event-driven design with background threading for non-blocking operations
-- JSON-based persistent state management surviving system crashes
-- Comprehensive error handling with automatic recovery strategies
-- Logging and monitoring at each system layer for debugging
-
-**5. Industrial Control Workflow**
-- Position-based macro system (9 calibrated soldering positions)
-- Automatic homing and position verification before each cycle
-- Emergency stop protocol (M112 G-Code) for immediate shutdown
-- Sensor timeout and communication failure recovery
-
-### Why This Architecture Works in Production
-
-This isn't a prototype—the system handles real manufacturing constraints:
-- **Repeatability:** 1000+ cycles without human intervention
-- **Reliability:** Graceful degradation when components fail
-- **Debuggability:** Each layer (firmware, OS, Python, UI) can be diagnosed independently
-- **Maintainability:** Clear separation of concerns, no spaghetti code
-- **Scalability:** Architecture ready for multi-line coordination or hardware upgrades
+**Why This Matters:** The system processes 1000+ cycles autonomously, handling real manufacturing constraints like thermal cycling, mechanical precision, and component synchronization—not a prototype, but production-ready code.
 
 ---
 
@@ -403,7 +314,7 @@ The architecture supports several advanced features:
 |----------|---------|
 | **Duration** | Multi-month engineering project |
 | **Team Size** | Individual contributor |
-| **Hardware Cost** | ~€5,000 (3D printer + sensors + pneumatics) |
+| **Hardware Cost** | €2,000 (3D printer + sensors + pneumatics) |
 | **Development Language** | Python 3, Shell scripting |
 | **Deployment Platform** | Raspberry Pi 3B+, OctoPi OS |
 | **Target Application** | PCB assembly automation, educational robotics |
