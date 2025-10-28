@@ -214,11 +214,6 @@ One operator can manage multiple runs - ideal for
 batch production with minimal labor overhead
 ```
 
----
-
-## 📈 Weekly Production Comparison: Manual vs. Automated
----
-
 ## 🎯 Technical Implementation Highlights
 
 **Real-Time Embedded Control**
