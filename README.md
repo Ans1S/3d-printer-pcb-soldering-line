@@ -55,28 +55,28 @@ A complete production line featuring:
 
 ### System Architecture Diagram
 ```
-┌─────────────────────────────────────────────────────────┐
-│         Kivy Touch-HMI Interface (1024x600px)           │
+┌──────────────────────────────────────────────────────────┐
+│         Kivy Touch-HMI Interface (1024x600px)            │
 │  ┌──────────────────────┬──────────────────────────────┐ │
 │  │   Standard Mode      │      Expert Mode             │ │
 │  │  - Auto Sequences    │  - Manual GPIO Control       │ │
 │  │  - Object Detection  │  - Duration/Hold Settings    │ │
 │  │  - Emergency Stop    │  - Pin Testing               │ │
 │  └──────────────────────┴──────────────────────────────┘ │
-└────────────────┬────────────────────────────────────────┘
+└────────────────┬─────────────────────────────────────────┘
                  │
         ┌────────┴────────┐
         │                 │
-    ┌───▼─────────┐   ┌──▼──────────────┐
+    ┌───▼─────────┐   ┌───▼─────────────┐
     │  GPIO Layer │   │ OctoPrint REST  │
     │ (RPi.GPIO)  │   │     API         │
     │             │   │                 │
     │ Pins 17-27  │   │ G-Code Control  │
-    └───┬────────┬┘   └────────┬────────┘
-        │        │             │
-    ┌───▼──┬────▼─┬────────┬──▼──────┐
-    │      │      │        │         │
-  ┌─▼─┐ ┌─▼─┐ ┌─▼──┐ ┌───▼─┐ ┌──┬─▼─┐
+    └───┬────┬────┘   └───────┬─────────┘
+        │    │                │
+    ┌───▼──┬─▼──┬────────┬────▼─────┐
+    │      │    │        │          │
+  ┌─▼─┐  ┌─▼─┐ ┌▼───┐ ┌──▼──┐ ┌───┬─▼─┐
   │Belt│ │Dis│ │Coil│ │ DUT │ │I2C│   │
   │    │ │pen│ │Ctrl│ │Hold │ │   │   │
   └────┘ └───┘ └────┘ └─────┘ └───┴───┘
@@ -193,18 +193,18 @@ while production_running:
 ┌──────────────────────────────────────────────┐
 │    Production Line Performance Metrics       │
 ├──────────────────────────────────────────────┤
-│ Cycle Time per Board      │ 54.1 seconds    │
-│ Feeder Capacity           │ 29 boards       │
-│ Autonomous Run Time       │ 26 minutes      │
-│ Full Feeder Processing    │ ~26.15 min      │
-│ Operator Intervention     │ < 2 min per run │
-│ Throughput (Effective)    │ 67 boards/hour* │
-│ Total Boards Processed    │ 2,000+          │
-│ Soldering Success Rate    │ 99.8%           │
-│ System Uptime             │ > 99.5%         │
-│ Sensor Accuracy           │ 100% detection  │
-│ GPIO Response Time        │ < 5ms           │
-│ MTBF (Mean Time)          │ > 500 hours     │
+│ Cycle Time per Board      │ 54.1 seconds     │
+│ Feeder Capacity           │ 29 boards        │
+│ Autonomous Run Time       │ 26 minutes       │
+│ Full Feeder Processing    │ ~26.15 min       │
+│ Operator Intervention     │ < 2 min per run  │
+│ Throughput (Effective)    │ 67 boards/hour*  │
+│ Total Boards Processed    │ 2,000+           │
+│ Soldering Success Rate    │ 99.8%            │
+│ System Uptime             │ > 99.5%          │
+│ Sensor Accuracy           │ 100% detection   │
+│ GPIO Response Time        │ < 5ms            │
+│ MTBF (Mean Time)          │ > 500 hours      │
 └──────────────────────────────────────────────┘
 
 * 29 boards every 26.15 min + 2 min reload = 28 min total
